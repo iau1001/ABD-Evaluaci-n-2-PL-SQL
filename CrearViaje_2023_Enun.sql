@@ -84,6 +84,8 @@ commit;
 create or replace procedure crearViaje( m_idRecorrido int, m_idAutocar int, m_fecha date, m_conductor varchar) is
 
 aut_modelo autocares.modelo%type;
+num_plazas modelos.nplazas%type;
+num_viajes integer;
 
 begin
     begin
@@ -105,6 +107,15 @@ begin
         rollback;
         raise_application_error(-20002,'El autocar no existe');
     end;
+	
+	--Se comprueba si el autocar está ocupado
+    select count(*) into num_viajes
+    from viajes where idAutocar=m_idAutocar and fecha=m_fecha;
+    --Si está ocupado se lanza el error -20003
+    if num_viajes!=0 then
+        rollback;
+        raise_application_error(-20003,'Autocar ocupado');
+    end if;
 end;
 /
 
