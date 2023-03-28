@@ -83,8 +83,19 @@ commit;
 
 create or replace procedure crearViaje( m_idRecorrido int, m_idAutocar int, m_fecha date, m_conductor varchar) is
 
+aut_modelo autocares.modelo%type;
+
 begin
-    null; -- Retira el null y rellena el procedimiento
+    begin
+        --Se obtiene el modelo del autocar. Si el autocar no existe lanza no_data_found
+        select modelo into aut_modelo 
+        from autocares where autocares.idAutocar=m_idAutocar;
+	--Se captura la excepción y se lanza el error -20002
+    exception
+        when no_data_found then
+        rollback;
+        raise_application_error(-20002,'El autocar no existe');
+    end;
 end;
 /
 
