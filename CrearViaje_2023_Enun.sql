@@ -136,6 +136,11 @@ begin
         rollback;
         raise_application_error(-20004,'Viaje duplicado');
     end if;
+	
+	--Se cumplen todos los requisitos,se inserta el viaje
+    insert into viajes (idViaje, idAutocar, idRecorrido, fecha, nPlazasLibres,  Conductor)
+    values (seq_viajes.nextval,m_idAutocar,m_idRecorrido,m_fecha,num_plazas,m_conductor);
+    commit;
 end;
 /
 
