@@ -86,6 +86,7 @@ create or replace procedure crearViaje( m_idRecorrido int, m_idAutocar int, m_fe
 aut_modelo autocares.modelo%type;
 num_plazas modelos.nplazas%type;
 num_viajes integer;
+num_rec integer;
 
 begin
     begin
@@ -115,6 +116,15 @@ begin
     if num_viajes!=0 then
         rollback;
         raise_application_error(-20003,'Autocar ocupado');
+    end if;
+	
+	--Se comprueba si existe el recorrido
+    select count(*) into num_rec
+    from recorridos where idRecorrido=m_idRecorrido;
+    --Si no existe, se lanza el error -20001
+    if num_rec = 0 then
+        rollback;
+        raise_application_error(-20001,'El recorrido no existe');
     end if;
 end;
 /
