@@ -87,6 +87,7 @@ aut_modelo autocares.modelo%type;
 num_plazas modelos.nplazas%type;
 num_viajes integer;
 num_rec integer;
+num_dupl integer;
 
 begin
     begin
@@ -125,6 +126,15 @@ begin
     if num_rec = 0 then
         rollback;
         raise_application_error(-20001,'El recorrido no existe');
+    end if;
+	
+	--Se comprueba si se duplica el viaje
+    select count(*) into num_dupl
+    from viajes where idRecorrido=m_idRecorrido and fecha=m_fecha;
+    --Si es un viaje duplicado, se lanza el error -20004
+    if num_dupl != 0 then
+        rollback;
+        raise_application_error(-20004,'Viaje duplicado');
     end if;
 end;
 /
