@@ -90,6 +90,15 @@ begin
         --Se obtiene el modelo del autocar. Si el autocar no existe lanza no_data_found
         select modelo into aut_modelo 
         from autocares where autocares.idAutocar=m_idAutocar;
+		--Si no tiene modelo se asigna el num. de plazas a 25
+        if aut_modelo IS NULL then
+            num_plazas := 25;
+        --Si no, se obtiene el num. de plazas
+        else
+            select nplazas into num_plazas
+            from autocares join modelos on autocares.modelo=modelos.idModelo
+            where autocares.idAutocar=m_idAutocar;
+        end if;
 	--Se captura la excepción y se lanza el error -20002
     exception
         when no_data_found then
