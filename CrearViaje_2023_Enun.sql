@@ -141,6 +141,12 @@ begin
     insert into viajes (idViaje, idAutocar, idRecorrido, fecha, nPlazasLibres,  Conductor)
     values (seq_viajes.nextval,m_idAutocar,m_idRecorrido,m_fecha,num_plazas,m_conductor);
     commit;
+	
+--Captura la excepción, realiza rollback y la relanza    
+exception
+    when others then
+        rollback;
+        raise;
 end;
 /
 
